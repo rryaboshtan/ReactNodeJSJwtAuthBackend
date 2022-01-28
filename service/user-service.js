@@ -9,7 +9,7 @@ const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
 
 class UserService {
-    async registration(email, password) {
+   async registration(email, password) {
       try {
          const candidate = await UserModel.findOne({ email });
 
@@ -21,13 +21,13 @@ class UserService {
          console.log('In User Service registration');
          const activationLink = uuid.v4();
          const user = await UserModel.create({ email, password: hashPassword, activationLink });
-          mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
+         mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
          //  mailService.sendActivationMail(email, activationLink);
- 
+
          console.log('In User Service registration');
          const userDto = new UserDto(user); //id, email, isActivated
          const tokens = tokenService.generateTokens({ ...userDto });
-           
+
          await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
          return {
@@ -38,6 +38,14 @@ class UserService {
          console.log(error);
          // res.send({ message: 'Server error' });
       }
+   }
+   async activate(activationLink) {
+      const user = await UserModel.findOne({ activationLink });
+      if (!user) {
+         throw new Error('Incorrect activation link' + activationLink);
+      }
+      user.isActivated = true;
+      await user.save();
    }
 }
 
