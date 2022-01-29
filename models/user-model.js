@@ -7,4 +7,4 @@ const UserSchema = new Schema({
    activationLink: { type: String },
 });
 
-module.exports = model('UserJwt', UserSchema);
+module.exports = model('UserJwts', UserSchema);

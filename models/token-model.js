@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const TokenSchema = new Schema({
-   email: { type: Schema.Types.ObjectId, ref: 'UserJwt' },
+   user: { type: Schema.Types.ObjectId, ref: 'UserJwts' },
    refreshToken: { type: String, required: true },
 });
 
