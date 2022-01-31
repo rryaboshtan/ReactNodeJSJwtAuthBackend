@@ -12,7 +12,7 @@ class UserService {
       try {
          const candidate = await UserModel.findOne({ email });
 
-         if (candidate) {
+         if (!candidate) {
             // throw new Error(`User with email ${email} already exist`);
             throw ApiError.BadRequest(`User with email ${email} already exist`);
          }
